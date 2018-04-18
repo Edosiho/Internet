@@ -25,6 +25,12 @@
                     Confirmar Password: <input type="password" name="confirmPassword" id = "txtConfirmPassword"><br>            
                     <input type="button" value="Registrar" id = "btnRegistrar" class="button">
                     <input type="hidden" name="request" value ="registrar">
+                    
+                    <%HttpSession seccion = request.getSession(false);
+                    if (seccion.getAttribute("error") != null){%>
+                        <br><br><h3><%=seccion.getAttribute("error").toString()%></h3>
+                        <%seccion.removeAttribute("error");
+                    } %>
                 </form>
             </div>
         </div>

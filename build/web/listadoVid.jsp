@@ -4,10 +4,10 @@
     Author     : Wal-Mart
 --%>
 
-<%@page import="ValueObjects.Video"%>
-<%@page import="Modelo.VideoSQL"%>
+<%@page import="ValueObjects.VideoVO"%>
+<%@page import="Modelo.Video"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="ValueObjects.Video"%>
+<%@page import="ValueObjects.VideoVO"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%HttpSession seccion = request.getSession(false);
@@ -44,11 +44,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <%ArrayList<Video> listaVideos = (ArrayList<Video>) request.getAttribute("listaVideos") ;%>
+                <%ArrayList<VideoVO> listaVideos = (ArrayList<VideoVO>) request.getAttribute("listaVideos") ;%>
                 
                 <%if(listaVideos.size()>0)
                 {
-                    for(Video video : listaVideos) {%>  
+                    for(VideoVO video : listaVideos) {%>  
                     <tr>
                     <td><%=video.getId()%></td>
                     <td><%=video.getTitulo()%></td>

@@ -17,12 +17,18 @@
         <div id="extra">
             <div id="wrapper" class ="container"  align >
                 <form action = "Usuarios" method="post" id = "login">
-                    Nombre de Usuario: <input type="text" name="nombreUsuario" id = "txtNombreUsuario"><br>
-                    Password: <input type="password" name="password" id = "txtPassword"><br>
+                    Nombre de Usuario: (mínimo 6 máximo 20 caracteres ) <input type="text" name="nombreUsuario" id = "txtNombreUsuario"><br>
+                    Password: (mínimo 6 máximo 15 caracteres) <input type="password" name="password" id = "txtPassword"><br>
                     <input type="button" value = "Login" id = "btnLogear" class="button"><br>
                     <input type="hidden" name="request" value ="login" align="center">
                     <br>No tienes Cuenta?<br>
-                     <a href ="registroUsu.jsp" class="button">Registrar</a>
+                    <a href ="registroUsu.jsp" class="button">Registrar</a>
+                    
+                    <% HttpSession seccion = request.getSession(false);
+                    if (seccion.getAttribute("error") != null){%>
+                        <br><br><h3><%=seccion.getAttribute("error").toString()%></h3>
+                    <% seccion.removeAttribute("error");
+                    } %>
                 </form>
             </div>
         </div>    

@@ -12,16 +12,23 @@ window.addEventListener('load', function (){
            var nombreUsuario =  document.getElementById('txtNombreUsuario').value; 
            var password =  document.getElementById('txtPassword').value;
            var ConfirmPassword =  document.getElementById('txtConfirmPassword').value; 
-            if (nombre.length > 0 && apellido.length > 0 && correoElectronico.length > 0  
-                && nombreUsuario.length > 0 && password.length > 0){
+            if (nombre.length === 0 || nombre.length > 50 || (/^\s+$/.test(nombre))){
+               alert('Los datos ingresados en el campo Nombre no cumplen el formato');
+           }else if(apellido.length === 0 || apellido.length > 50 || (/^\s+$/.test(apellido))){
+               alert('Los datos ingresados en el campo Apellido no cumplen el formato');
+            }else if(correoElectronico.length < 6 || correoElectronico.length > 50 || (/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)/.test(correoElectronico))){
+               alert('Los datos ingresados en el campo Correo Electronico no cumplen el formato');
+            }else if(nombreUsuario.length < 6 || nombreUsuario.length > 20 || (/^\s+$/.test(nombreUsuario))){
+               alert('Los datos ingresados en el campo Nombre de Usuario no cumplen el formato');
+           }else if(password.length < 6 || password.length > 15 || (/^\s+$/.test(password))){
+               alert('Los datos ingresados en el campo Password no cumplen el formato');
+           }else {
+               
                if(password === ConfirmPassword){
                    document.getElementById('registroUsu').submit();
                }else{
                   alert('Los campos de contraseña no coinciden'); 
-               }     
-               
-           }else{
-               alert('Ingrese correctamente los campos');
+               } 
            }   
         });
     });

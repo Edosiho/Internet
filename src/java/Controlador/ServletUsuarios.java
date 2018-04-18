@@ -5,10 +5,10 @@
  */
 package Controlador;
 
-import Modelo.UsuarioSQL;
-import Modelo.VideoSQL;
-import ValueObjects.Usuario;
-import ValueObjects.Video;
+import Modelo.Usuario;
+import Modelo.Video;
+import ValueObjects.UsuarioVO;
+import ValueObjects.VideoVO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -49,24 +49,32 @@ public class ServletUsuarios extends HttpServlet {
     }
     
     private void logearUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        UsuarioSQL usuarioSQL = new UsuarioSQL();
-        String nombreUsuario = request.getParameter("nombreUsuario");
-        String password = request.getParameter("password");
-        try {
-            if (usuarioSQL.autenticacion(nombreUsuario, password)){
-                HttpSession seccion = request.getSession(true);
-                seccion.setAttribute("usuario", nombreUsuario);
-                listarVideos(request, response);
-            }else{
+        try {           
+            String nombreUsuario = request.getParameter("nombreUsuario");
+            String password = request.getParameter("password");    
+            HttpSession seccion = request.getSession(true);
+            try {
+                Usuario usuarioSQL = new Usuario();
+                if (usuarioSQL.autenticacion(nombreUsuario, password)){
+                    seccion.setAttribute("usuario", nombreUsuario);
+                    listarVideos(request, response);
+                }else{            
+                    seccion.setAttribute("error", "Nombre de Usuario o Contraseña incorrecta"); 
+                    response.sendRedirect("login.jsp");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
                 response.sendRedirect("login.jsp");
             }
-        } catch (SQLException ex) {
+           
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            
         }
     }
     private void registrarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        Usuario usuario = new Usuario();
+        HttpSession seccion = request.getSession(false);
+        UsuarioVO usuario = new UsuarioVO();
         usuario.setNombre(request.getParameter("nombre"));
         usuario.setApellido(request.getParameter("apellido"));
         usuario.setCorreoElectronico(("correoElectronico"));
@@ -74,28 +82,37 @@ public class ServletUsuarios extends HttpServlet {
         usuario.setPassword(request.getParameter("password"));
         if (usuario.getPassword().equals(request.getParameter("confirmPassword"))){
             try {
-                UsuarioSQL usuarioSQL = new UsuarioSQL();
+                Usuario usuarioSQL = new Usuario();
                 if (usuarioSQL.registrarUsuario(usuario)){
                     response.sendRedirect("login.jsp");
-                }else{
-                    response.sendRedirect("registroUsu.jsp");
                 }
             } catch (SQLIntegrityConstraintViolationException ex) {
                 Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                seccion.setAttribute("error", "El nombre de usuario ya se encuentra registrado"); 
+                response.sendRedirect("registroUsu.jsp");;
             } catch (SQLException ex) {
+                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
+                response.sendRedirect("login.jsp");
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
     private void listarVideos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    try {
-            VideoSQL videoSQL = new VideoSQL();
-            ArrayList<Video> listaVideos = videoSQL.ListarVideos();
+    try { 
+            Video video = new Video();
+            ArrayList<VideoVO> listaVideos = video.ListarVideos();
             request.setAttribute("listaVideos", listaVideos);
             request.getRequestDispatcher("listadoVid.jsp").forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ServletListadoVid.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
+            HttpSession seccion = request.getSession(false);
+            seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
+            response.sendRedirect("login.jsp");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         }
     
     }

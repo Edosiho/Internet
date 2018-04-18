@@ -5,12 +5,13 @@
  */
 package Controlador;
 
-import Modelo.VideoSQL;
-import ValueObjects.Video;
+import Modelo.Video;
+import ValueObjects.VideoVO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,14 +50,15 @@ public class ServletRegistroVid extends HttpServlet {
         
     }
     private void registrarVideo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        Video video = new Video();
+        HttpSession seccion = request.getSession(true);
+        VideoVO video = new VideoVO();
         video.setTitulo(request.getParameter("titulo")); 
         video.setAutor(request.getParameter("autor"));  
         video.setDuracion(request.getParameter("duracion"));
         video.setDescripcion(request.getParameter("descripcion"));
         video.setFormato(request.getParameter("formato"));      
         try {
-            VideoSQL videoSQL = new VideoSQL();
+            Video videoSQL = new Video();
             if (videoSQL.registrarVideo(video)){                 
                 listarVideos(request, response);   
             }else{
@@ -65,19 +67,38 @@ public class ServletRegistroVid extends HttpServlet {
             
             } catch (SQLDataException ex) {
                 Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                // aqui accion no cumple formato time 
+                
+                seccion.setAttribute("error", "El formato del campo duracion no es el correcto"); 
+                response.sendRedirect("listadoVid.jsp");
+                
+            } catch (SQLIntegrityConstraintViolationException ex) {
+            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
+            // aqui accion no cumple formato time
+                seccion.setAttribute("error", "Ese titulo ya se encuatra registrado con el mismo autor"); 
+                response.sendRedirect("listadoVid.jsp");
             } catch (SQLException ex) {
+            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
+                seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
+                response.sendRedirect("login.jsp");
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     private void listarVideos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
     try {
-            VideoSQL videoSQL = new VideoSQL();
-            ArrayList<Video> listaVideos = videoSQL.ListarVideos();
+            Video video = new Video();
+            ArrayList<VideoVO> listaVideos = video.ListarVideos();
             request.setAttribute("listaVideos", listaVideos);
             request.getRequestDispatcher("listadoVid.jsp").forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ServletListadoVid.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
+            HttpSession seccion = request.getSession(true);
+            seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
+            response.sendRedirect("login.jsp");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
         }
     
     }

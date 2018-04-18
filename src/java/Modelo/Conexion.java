@@ -18,26 +18,23 @@ import java.util.logging.Logger;
 public class Conexion {
      private final String usernameDB = "root";
     private final String passworUserDB = "root";
-   /* private final String host = "localhost";
+    private final String host = "localhost";
     private final String port = "1527";
-    private final String dataBase = "ISDCM_DB";*/
-    private final String JDBC_CLASSNAME = "org.apache.derby.jdbc.ClientDriver";
-    private final String URL = "jdbc:derby://localhost:1527/ISDCM_DB";
+    private final String dataBase = "ISDCM_DB";   
+    private final String JDBC_CLASSNAME = "org.apache.derby.jdbc.ClientDriver";    
+    private final String URL = "jdbc:derby://"+host+":"+port+"/"+dataBase;
+    
     private Connection conexion;
     
-     public Conexion(){
+     public Conexion() throws ClassNotFoundException, SQLException{
         conexion = null;
         establecerConexion();
     }
-    private void establecerConexion(){
-        try {
+    private void establecerConexion() throws ClassNotFoundException, SQLException{
+
             Class.forName(JDBC_CLASSNAME);
             conexion = DriverManager.getConnection(URL, usernameDB, passworUserDB);
-        } catch ( SQLException ex) {
-            System.err.printf("ERROR: "+ex);
-        } catch (ClassNotFoundException ex) {
-            System.err.printf("ERROR: "+ex);
-        }
+
     }
     public void cerraConexion() {
         if ( this.conexion != null) {

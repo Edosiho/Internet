@@ -29,6 +29,12 @@
                    Formato: <input type="text" name="formato" id = "txtFormato"><br>
                    <input type="button" value="Registrar" id = "btnRegistrar" class="button">
                    <%seccion.setAttribute("usuario", nombreUsuario);%>
+                   
+                    <%if (seccion.getAttribute("error") != null){%>
+                        <br><br><h3><%=seccion.getAttribute("error").toString()%></h3>
+                        <% seccion.removeAttribute("error");
+                    }%>
+            
                </form>
             </div>
         </div>
