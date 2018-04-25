@@ -25,9 +25,9 @@
                     <a href ="registroUsu.jsp" class="button">Registrar</a>
                     
                     <% HttpSession seccion = request.getSession(false);
-                    if (seccion.getAttribute("error") != null){%>
-                        <br><br><h3><%=seccion.getAttribute("error").toString()%></h3>
-                    <% seccion.removeAttribute("error");
+                    if (seccion.getAttribute("mensaje") != null){%>
+                        <br><br><h3><%=seccion.getAttribute("mensaje").toString()%></h3>
+                    <% seccion.removeAttribute("mensaje");
                     } %>
                 </form>
             </div>

@@ -5,51 +5,56 @@
  */
 package Modelo;
 
-import ValueObjects.UsuarioVO;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  *
  * @author Wal-Mart
  */
-public class Usuario extends  Conexion{
+public class Usuario {
+    private String nombreUsuario;  //varchar 20
+    private String nombre; //varchar 50
+    private String apellido; //varchar 50
+    private String correoElectronico; //varchar 50
+    private String password; //varchar 15
 
-    public Usuario() throws ClassNotFoundException, SQLException {
-    
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
-    
-    public boolean autenticacion(String nombreUsuario, String password) throws ClassNotFoundException, SQLException{
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        String consulta = "Select * from USUARIOS where NOMBRE_USUARIO = ? and PASSWORD = ?";
-        pst = getConexion().prepareStatement(consulta);
-        pst.setString(1, nombreUsuario);
-        pst.setString(2, password);
-        rs = pst.executeQuery();   
-        while (rs.next()) {
-           cerraConexion();
-           return true;
-        }  
-    return false;
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
-       
-    public boolean registrarUsuario(UsuarioVO usuario) throws SQLException{
-        PreparedStatement pst = null;
-        String consulta = "Insert into USUARIOS values (?,?,?,?,?)";
-        pst = getConexion().prepareStatement(consulta);
-        pst.setString(1, usuario.getNombreUsuario());
-        pst.setString(2, usuario.getNombre());
-        pst.setString(3, usuario.getApellido());
-        pst.setString(4, usuario.getCorreoElectronico());
-        pst.setString(5, usuario.getPassword());
-        if(pst.executeUpdate() == 1){
-            cerraConexion();
-             return true;
-        }
-        cerraConexion();    
-        return false;
-    }   
-    
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }  
+ 
 }

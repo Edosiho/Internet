@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/WebVideos/BusquedaVideosWS?wsdl" uri="src/conf/xml-resources/web-service-references/BusquedaVideosWS/wsdl/localhost_8080/WebVideos/BusquedaVideosWS.wsdl"/>
+    <system systemId="http://localhost:8080/WebVideos/BusquedaVideosWS?xsd=1" uri="src/conf/xml-resources/web-service-references/BusquedaVideosWS/wsdl/localhost_8080/WebVideos/BusquedaVideosWS.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/BusquedaVideosWS/BusquedaVideosWS?wsdl" uri="src/conf/xml-resources/web-service-references/BusquedaVideosWS_1/wsdl/localhost_8080/BusquedaVideosWS/BusquedaVideosWS.wsdl"/>
+    <system systemId="http://localhost:8080/BusquedaVideosWS/BusquedaVideosWS?xsd=1" uri="src/conf/xml-resources/web-service-references/BusquedaVideosWS_1/wsdl/localhost_8080/BusquedaVideosWS/BusquedaVideosWS.xsd_1.xsd"/>
+</catalog>

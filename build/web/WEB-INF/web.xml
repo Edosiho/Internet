@@ -8,6 +8,14 @@
         <servlet-name>ServletRegistroVid</servlet-name>
         <servlet-class>Controlador.ServletRegistroVid</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletBusqueda</servlet-name>
+        <servlet-class>Controlador.ServletBusqueda</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletListadoVid</servlet-name>
+        <servlet-class>Controlador.ServletListadoVid</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletUsuarios</servlet-name>
         <url-pattern>/Usuarios</url-pattern>
@@ -15,6 +23,14 @@
     <servlet-mapping>
         <servlet-name>ServletRegistroVid</servlet-name>
         <url-pattern>/RegistroVideo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletBusqueda</servlet-name>
+        <url-pattern>/BusquedaVideos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletListadoVid</servlet-name>
+        <url-pattern>/ListadoVideos</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -5,90 +5,96 @@
  */
 package Modelo;
 
-import ValueObjects.VideoVO;
-import Util.UtilFecha;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
  *
  * @author Wal-Mart
  */
-public class Video extends Conexion{
-
-    public Video() throws ClassNotFoundException, SQLException {
-    }
-    private static int INICIO_REPRODUCCIONES = 0;
+public class Video {
+    private int id;  
+    private String titulo; //varchar 100
+    private String autor; //varchar 100
+    private String fechaCreacion; //date
+    private String duracion; //time
+    private int reproducciones; 
+    private String descripcion; //255
+    private String formato; //5
+    private String ubicacion;
     
-    public boolean registrarVideo(VideoVO video) throws SQLException{
-        UtilFecha fecha = new UtilFecha();
-        PreparedStatement pst;
-        String consulta = "Insert into VIDEOS values (?,?,?,?,?,?,?,?)";
-        pst = getConexion().prepareStatement(consulta);
-        pst.setInt(1, obtenerIdNuevoUsuario());
-        pst.setString(2, video.getTitulo());
-        pst.setString(3, video.getTitulo());
-        pst.setString(4, fecha.obtenerFechaActualTexto());
-        pst.setString(5, video.getDuracion());
-        pst.setInt(6, INICIO_REPRODUCCIONES);
-        pst.setString(7, video.getDescripcion());
-        pst.setString(8, video.getFormato());
-        if(pst.executeUpdate() == 1){
-            cerraConexion();
-            return true;
-        }
-        cerraConexion();
-        return false;
-    }   
-     
-     public ArrayList<VideoVO> ListarVideos() throws SQLException{ 
-        PreparedStatement pst;
-        ResultSet rs;
-        ArrayList<VideoVO> listaVideos = new ArrayList<VideoVO>();
-        String consulta = "Select * from VIDEOS";
-        pst = getConexion().prepareStatement(consulta);
-        rs = pst.executeQuery();
-        while (rs.next()) {
-           VideoVO video = new VideoVO(); 
-           video.setId(rs.getInt("ID"));
-           video.setTitulo(rs.getString("TITULO"));
-           video.setAutor(rs.getString("AUTOR"));
-           video.setFechaCreacion(rs.getString("FECHA_CREACION"));
-           video.setDuracion(rs.getString("DURACION"));
-           video.setReproducciones(rs.getInt("REPRODUCCIONES"));
-           video.setDescripcion(rs.getString("DESCRIPCION"));
-           video.setFormato(rs.getString("FORMATO"));
-           listaVideos.add(video);
-        }   
-           cerraConexion();
-        return listaVideos;
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(String duracion) {
+        this.duracion = duracion;
+    }
+
+    public int getReproducciones() {
+        return reproducciones;
+    }
+
+    public void setReproducciones(int reproducciones) {
+        this.reproducciones = reproducciones;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getFormato() {
+        return formato;
+    }
+
+    public void setFormato(String formato) {
+        this.formato = formato;
+    }
+    
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
      
-     private int obtenerIdNuevoUsuario(){
-         return obtenerIdMaximo() + 1;
-     }
-     
-     private int obtenerIdMaximo() {
-        int id = 0;
-        
-        try {
-            PreparedStatement pst;
-            ResultSet rs;
-            String consulta = "Select max(id) from VIDEOS as MAX_ID";
-            pst = getConexion().prepareStatement(consulta);
-            rs = pst.executeQuery();
-            while (rs.next()) {
-                id = rs.getInt("1");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Video.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return id;
-    } 
-   
+    
 }
+

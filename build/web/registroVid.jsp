@@ -24,9 +24,10 @@
                 <form action="RegistroVideo" method="post" id = "registroVid">
                    Título: <input type="text" name="titulo" id = "txtTitulo"><br>
                    Autor: <input type="text" name="autor" id = "txtAutor"><br>
-                   Duración: <input type="text" name="duracion" id = "txtDuracion"><br>
-                   Descripcion: <input type="text" name="descripcion" id = "txtDescripcion"><br>
+                   Duración(hh:mm:ss): <input type="text" name="duracion" id = "txtDuracion"><br>
+                   Descripción: <input type="text" name="descripcion" id = "txtDescripcion"><br>
                    Formato: <input type="text" name="formato" id = "txtFormato"><br>
+                   Ubicación: <input type="text" name="ubicacion" id = "txtUbicacion"><br>
                    <input type="button" value="Registrar" id = "btnRegistrar" class="button">
                    <%seccion.setAttribute("usuario", nombreUsuario);%>
                    
@@ -35,7 +36,7 @@
                         <% seccion.removeAttribute("error");
                     }%>
             
-               </form>
+               </form>    
             </div>
         </div>
     </body>

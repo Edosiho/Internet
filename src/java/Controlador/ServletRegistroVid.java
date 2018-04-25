@@ -5,16 +5,11 @@
  */
 package Controlador;
 
+import DB.VideoSQL;
 import Modelo.Video;
-import ValueObjects.VideoVO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,55 +46,28 @@ public class ServletRegistroVid extends HttpServlet {
     }
     private void registrarVideo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         HttpSession seccion = request.getSession(true);
-        VideoVO video = new VideoVO();
+        Video video = new Video();
         video.setTitulo(request.getParameter("titulo")); 
         video.setAutor(request.getParameter("autor"));  
         video.setDuracion(request.getParameter("duracion"));
         video.setDescripcion(request.getParameter("descripcion"));
-        video.setFormato(request.getParameter("formato"));      
-        try {
-            Video videoSQL = new Video();
-            if (videoSQL.registrarVideo(video)){                 
-                listarVideos(request, response);   
-            }else{
-                response.sendRedirect("listaVid.jsp");
-            }
-            
-            } catch (SQLDataException ex) {
-                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                // aqui accion no cumple formato time 
-                
-                seccion.setAttribute("error", "El formato del campo duracion no es el correcto"); 
-                response.sendRedirect("listadoVid.jsp");
-                
-            } catch (SQLIntegrityConstraintViolationException ex) {
-            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
-            // aqui accion no cumple formato time
-                seccion.setAttribute("error", "Ese titulo ya se encuatra registrado con el mismo autor"); 
-                response.sendRedirect("listadoVid.jsp");
-            } catch (SQLException ex) {
-            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
-                seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
-                response.sendRedirect("login.jsp");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
+        video.setFormato(request.getParameter("formato"));    
+        video.setUbicacion(request.getParameter("ubicacion")); 
+        VideoSQL videoSQL = new VideoSQL();
+        String respuesta = videoSQL.registrarVideo(video);
+        if (respuesta == null){
+            seccion.setAttribute("mensaje", "El video fue correctamente registrado");  
+        }else{
+            seccion.setAttribute("mensaje", respuesta); 
         }
-        
+        listarVideos(request, response);  
     }
+    
     private void listarVideos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    try {
-            Video video = new Video();
-            ArrayList<VideoVO> listaVideos = video.ListarVideos();
-            request.setAttribute("listaVideos", listaVideos);
-            request.getRequestDispatcher("listadoVid.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
-            HttpSession seccion = request.getSession(true);
-            seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
-            response.sendRedirect("login.jsp");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        VideoSQL video = new VideoSQL();
+        ArrayList<Video> listaVideos = video.ListarVideos();
+        request.setAttribute("listaVideos", listaVideos);
+        request.getRequestDispatcher("listadoVid.jsp").forward(request, response);
     
     }
     

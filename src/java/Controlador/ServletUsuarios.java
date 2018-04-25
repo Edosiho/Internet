@@ -5,14 +5,13 @@
  */
 package Controlador;
 
+import DB.UsuarioSQL;
+import DB.VideoSQL;
 import Modelo.Usuario;
 import Modelo.Video;
-import ValueObjects.UsuarioVO;
-import ValueObjects.VideoVO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,73 +47,48 @@ public class ServletUsuarios extends HttpServlet {
         }      
     }
     
-    private void logearUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        try {           
-            String nombreUsuario = request.getParameter("nombreUsuario");
-            String password = request.getParameter("password");    
-            HttpSession seccion = request.getSession(true);
-            try {
-                Usuario usuarioSQL = new Usuario();
-                if (usuarioSQL.autenticacion(nombreUsuario, password)){
-                    seccion.setAttribute("usuario", nombreUsuario);
-                    listarVideos(request, response);
-                }else{            
-                    seccion.setAttribute("error", "Nombre de Usuario o Contraseña incorrecta"); 
-                    response.sendRedirect("login.jsp");
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
-                response.sendRedirect("login.jsp");
-            }
-           
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void logearUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{          
+        String nombreUsuario = request.getParameter("nombreUsuario");
+        String password = request.getParameter("password");    
+        HttpSession seccion = request.getSession(true);
+        UsuarioSQL usuarioSQL = new UsuarioSQL();
+        String respuesta = usuarioSQL.autenticacion(nombreUsuario, password);
+        if (respuesta == null){
+            seccion.setAttribute("usuario", nombreUsuario);
+            listarVideos(request, response);
+        }else{            
+            seccion.setAttribute("mensaje", respuesta); 
+            response.sendRedirect("login.jsp");
+        }  
     }
+    
     private void registrarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         HttpSession seccion = request.getSession(false);
-        UsuarioVO usuario = new UsuarioVO();
+        Usuario usuario = new Usuario();
         usuario.setNombre(request.getParameter("nombre"));
         usuario.setApellido(request.getParameter("apellido"));
         usuario.setCorreoElectronico(("correoElectronico"));
         usuario.setNombreUsuario(request.getParameter("nombreUsuario"));
         usuario.setPassword(request.getParameter("password"));
         if (usuario.getPassword().equals(request.getParameter("confirmPassword"))){
-            try {
-                Usuario usuarioSQL = new Usuario();
-                if (usuarioSQL.registrarUsuario(usuario)){
-                    response.sendRedirect("login.jsp");
-                }
-            } catch (SQLIntegrityConstraintViolationException ex) {
-                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                seccion.setAttribute("error", "El nombre de usuario ya se encuentra registrado"); 
-                response.sendRedirect("registroUsu.jsp");;
-            } catch (SQLException ex) {
-                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-                seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
+            UsuarioSQL usuarioSQL = new UsuarioSQL();     
+            String resultado = usuarioSQL.registrarUsuario(usuario);
+            if(resultado == null){
+                seccion.setAttribute("mensaje", "Usuario Registrado Exitosamente");
                 response.sendRedirect("login.jsp");
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }else{
+                seccion.setAttribute("mensaje", resultado);
+                response.sendRedirect("login.jsp");                
             }
         }
     }
     
-    private void listarVideos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    try { 
-            Video video = new Video();
-            ArrayList<VideoVO> listaVideos = video.ListarVideos();
-            request.setAttribute("listaVideos", listaVideos);
-            request.getRequestDispatcher("listadoVid.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ServletRegistroVid.class.getName()).log(Level.SEVERE, null, ex);
-            HttpSession seccion = request.getSession(false);
-            seccion.setAttribute("error", "Se ha presentado un error, comuniquese con el Administrador"); 
-            response.sendRedirect("login.jsp");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServletUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
+    private void listarVideos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{ 
+        VideoSQL video = new VideoSQL();
+        ArrayList<Video> listaVideos = video.ListarVideos();
+        request.setAttribute("listaVideos", listaVideos);
+        request.getRequestDispatcher("listadoVid.jsp").forward(request, response);
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

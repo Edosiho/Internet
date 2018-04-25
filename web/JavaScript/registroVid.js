@@ -10,6 +10,7 @@ window.addEventListener('load', function (){
            var duracion =  document.getElementById('txtDuracion').value; 
            var descripcion =  document.getElementById('txtDescripcion').value;
            var formato =  document.getElementById('txtFormato').value; 
+           var ubicacion =  document.getElementById('txtUbicacion').value; 
             if (titulo.length === 0 || formato.length > 100 || (/^\s+$/.test(titulo))){ 
                alert('Los datos ingresados en el campo Titulo no cumplen el formato');   
             }else if(autor.length === 0 || autor.length > 100 || (/^\s+$/.test(autor))){
@@ -18,8 +19,10 @@ window.addEventListener('load', function (){
                alert('Los datos ingresados en el campo Descripcion no cumplen el formato');
             }else if(duracion.length !== 8 || (/^\s+$/.test(duracion))){
                alert('Los datos ingresados en el campo Duracion no cumplen el formato');
-           }else if(formato.length === 0 || formato.length > 5 || (/^\s+$/.test(formato))){
+            }else if(formato.length === 0 || formato.length > 5 || (/^\s+$/.test(formato))){
                alert('Los datos ingresados en el campo formato no cumplen el formato');
+            }else if(ubicacion.length === 0 || ubicacion.length > 300 || (/^(http|https)\:\/\/[a-z0-9-]+\.[a-z]{2,4}/gi.test(ubicacion))){
+               alert('Los datos ingresados en el campo ubicación no cumplen el formato');
            }else{
                document.getElementById('registroVid').submit(); 
            }

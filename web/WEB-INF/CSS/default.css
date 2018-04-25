@@ -13,6 +13,9 @@
 		font-weight: 300;
 		color: #555555;
 	}
+    input[type="radio"]{
+        vertical-align: middle;
+    }
 	
 	
 	h1, h2, h3
@@ -68,6 +71,7 @@
 		margin: 0em auto;
 		width: 800px;
 	}
+        
 	
 /*********************************************************************************/
 /* Image Style                                                                   */
@@ -579,6 +583,11 @@
 		margin-top: 2em;
 		margin-right: 1em;
 	}
+        #extra .text
+        {
+            margin-top: 2em;
+            margin-right: 1em;   
+        }
 	
 	#extra .fa
 	{
@@ -588,7 +597,9 @@
 		font-size: 3em;
 	}
 	#extra .container input {
-	  width: 95%;
+	  width: 90%;
 	  clear: both;
+          position: relative;
 	}
+       
 	
